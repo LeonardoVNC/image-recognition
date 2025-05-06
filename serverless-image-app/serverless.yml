@@ -13,6 +13,7 @@ package:
     - '!package-lock.json'
     - 'README.md'
     - '.gitignore'
+    - '!.serverless/**'
 provider:
   name: aws
   runtime: nodejs20.x
@@ -30,11 +31,11 @@ provider:
 
 
 functions:
-  hello:
-    handler: handler.hello
+  leoGetSignedUrl:
+    handler: handler.getSignedUrl
     events:
       - httpApi:
-          path: /
+          path: /signed-url
           method: get
 
 resources:
