@@ -1,8 +1,18 @@
 # "org" ensures this Service is used with the correct Serverless Framework Access Key.
 org: upbcertiaws
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: serverless-image-app-lab
 # "service" is the name of this project. This will also be added to your AWS resource names.
 service: serverless-image-app
 
+package:
+  individually: true
+  patterns:
+    - '!config.json'
+    - '!package.json'
+    - '!package-lock.json'
+    - 'README.md'
+    - '.gitignore'
 provider:
   name: aws
   runtime: nodejs20.x

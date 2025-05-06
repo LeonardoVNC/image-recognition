@@ -9,7 +9,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",git ad
+  "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.1692.0"
   }
