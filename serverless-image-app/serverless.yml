@@ -32,7 +32,7 @@ provider:
 
 functions:
   leoGetSignedUrl:
-    handler: handler.getSignedUrl
+    handler: src/handler.getSignedUrl
     events:
       - httpApi:
           path: /signed-url
@@ -44,6 +44,18 @@ resources:
       Type: AWS::S3::Bucket
       Properties: 
         BucketName: ${self:provider.environment.BUCKET_NAME}
+        CorsConfiguration:
+          CorsRules:
+            - AllowedMethods:
+              - PUT
+              - POST
+              - GET
+              - DELETE
+              AllowedOrigins:
+              - "*"
+              AllowedHeaders:
+              - "*"
+              MaxAge: 3000
     ImageTagsTable:
       Type: AWS::DynamoDB::Table
       Properties:
