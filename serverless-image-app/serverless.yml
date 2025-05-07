@@ -5,31 +5,29 @@ app: serverless-image-app-lab
 # "service" is the name of this project. This will also be added to your AWS resource names.
 service: serverless-image-app
 
-package:
-  individually: true
-  patterns:
-    - '!config.json'
-    - '!package.json'
-    - '!package-lock.json'
-    - 'README.md'
-    - '.gitignore'
-    - '!.serverless/**'
 provider:
   name: aws
   runtime: nodejs20.x
+  region: ${file(config.json):AWS_REGION}
   environment: 
     BUCKET_NAME:  ${file(config.json):S3_IMAGE_BUCKET}
     TABLE_NAME: ${file(config.json):DYNAMODB_TABLE_NAME}
-    REGION: ${file(config.json):AWS_REGION}
+
   iamRoleStatements:
-    - Effect: Allow
-      Action: 
+    - Effect: "Allow"
+      Action:
         - s3:*
         - rekognition:DetectLabels
       Resource:
-        - arn:aws:s3:::${file(config.json):S3_IMAGE_BUCKET}
-
-
+        - arn:aws:s3:::${file(config.json):S3_IMAGE_BUCKET}/*
+package:
+  exclude:
+    - config.json
+    - package.json
+    - package-lock.json
+    - README.md
+    - .gitignore
+    - .serverless/** 
 functions:
   leoGetSignedUrl:
     handler: src/handler.getSignedUrl
@@ -47,14 +45,14 @@ resources:
         CorsConfiguration:
           CorsRules:
             - AllowedMethods:
-              - PUT
-              - POST
-              - GET
-              - DELETE
+                - PUT
+                - POST
+                - GET 
+                - DELETE
               AllowedOrigins:
-              - "*"
+                - "*"
               AllowedHeaders:
-              - "*"
+                - "*"
               MaxAge: 3000
     ImageTagsTable:
       Type: AWS::DynamoDB::Table
