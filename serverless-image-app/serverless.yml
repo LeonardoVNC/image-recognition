@@ -19,7 +19,16 @@ provider:
         - s3:*
         - rekognition:DetectLabels
       Resource:
+        - arn:aws:s3:::${file(config.json):S3_IMAGE_BUCKET}
         - arn:aws:s3:::${file(config.json):S3_IMAGE_BUCKET}/*
+    - Effect: "Allow"
+      Action:
+        - rekognition:DetectLabels
+      Resource: "*"
+    - Effect: "Allow"
+      Action:
+        - dynamodb:PutItem
+      Resource: "*"
 package:
   exclude:
     - config.json
@@ -35,6 +44,14 @@ functions:
       - httpApi:
           path: /signed-url
           method: get
+
+  leoProcessImage:
+    handler: src/recognize.processImage
+    events:
+      - s3:
+          bucket: ${self:provider.environment.BUCKET_NAME}
+          event: s3:ObjectCreated:Put
+          existing: true
 
 resources:
   Resources:
