@@ -1,2 +1,4 @@
 node_modules
 .serverless
+serverless-image-app/nodejs
+serverless-image-app/layer_content.zip

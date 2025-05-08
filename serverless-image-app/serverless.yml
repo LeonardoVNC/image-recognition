@@ -3,7 +3,7 @@ org: upbcertiaws
 # "app" enables Serverless Framework Dashboard features and sharing them with other Services.
 app: serverless-image-app-lab
 # "service" is the name of this project. This will also be added to your AWS resource names.
-service: serverless-image-app
+service: serverless-image-final-lab
 
 provider:
   name: aws
@@ -37,9 +37,14 @@ package:
     - README.md
     - .gitignore
     - .serverless/** 
+    - node_modules/**
+    - nodejs/**
+    - layer_content.zip
 functions:
   leoGetSignedUrl:
     handler: src/handler.getSignedUrl
+    layers: 
+      - {Ref: LeoDependenciesLambdaLayer}
     events:
       - httpApi:
           path: /signed-url
@@ -47,12 +52,20 @@ functions:
 
   leoProcessImage:
     handler: src/recognize.processImage
+    layers: 
+      - {Ref: LeoDependenciesLambdaLayer}
     events:
       - s3:
           bucket: ${self:provider.environment.BUCKET_NAME}
           event: s3:ObjectCreated:Put
           existing: true
-
+layers:
+  leoDependencies:
+    name: 'leo-serverless-dependencies'
+    compatibleRuntimes:
+      - "nodejs20.x"
+    package:
+      artifact: layer_content.zip
 resources:
   Resources:
     UploadBucket:
